@@ -35,12 +35,24 @@ allprojects {
             compressJar(archiveFile.get().asFile)
         }
     }
+
+    afterEvaluate {
+        tasks.register<JavaExec>("run") {
+            classpath(sourceSets.main.get().runtimeClasspath, rootProject.configurations.getByName("runtimeClasspath"))
+            mainClass = tasks.jar.get().manifest.attributes["Main-Class"] as String
+        }
+    }
 }
 
 subprojects {
     if(name != "common") {
         dependencies {
             implementation(project(":common"))
+        }
+
+        tasks.jar {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
         }
     }
 

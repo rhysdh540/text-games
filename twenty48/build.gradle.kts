@@ -1,0 +1,1 @@
+tasks.jar.get().manifest.attributes["Main-Class"] = "dev.rdh.twenty48.Twenty48"

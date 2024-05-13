@@ -2,6 +2,7 @@ package dev.rdh.games;
 
 import lombok.Getter;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -210,6 +211,36 @@ public class Console implements AutoCloseable {
 
 	public int readInt(String prompt) {
 		return readInt(prompt, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	public void setBackgroundColor(int color) {
+		int r = (color >> 16) & 0xFF;
+		int g = (color >> 8) & 0xFF;
+		int b = color & 0xFF;
+		print(String.format("\033[48;2;%d;%d;%dm", r, g, b));
+	}
+
+	public void setBackgroundColor(Color color) {
+		setBackgroundColor(color == null ? 0 : color.getRGB());
+	}
+
+	public void resetBackgroundColor() {
+		print("\033[49m");
+	}
+
+	public void setForegroundColor(Color color) {
+		setForegroundColor(color == null ? 0 : color.getRGB());
+	}
+
+	public void resetForegroundColor() {
+		print("\033[39m");
+	}
+
+	public void setForegroundColor(int color) {
+		int r = (color >> 16) & 0xFF;
+		int g = (color >> 8) & 0xFF;
+		int b = color & 0xFF;
+		print(String.format("\033[38;2;%d;%d;%dm", r, g, b));
 	}
 
 	public int readInt(String prompt, int min, int max) {
